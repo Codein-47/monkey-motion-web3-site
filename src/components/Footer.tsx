@@ -1,7 +1,6 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Twitter, Instagram, Discord, Youtube } from "lucide-react";
+import { Twitter, Instagram, MessagesSquare, Youtube } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -21,7 +20,7 @@ const Footer = () => {
                 <Instagram />
               </a>
               <a href="#" className="text-foreground/70 hover:text-foreground transition-colors">
-                <Discord />
+                <MessagesSquare />
               </a>
               <a href="#" className="text-foreground/70 hover:text-foreground transition-colors">
                 <Youtube />
