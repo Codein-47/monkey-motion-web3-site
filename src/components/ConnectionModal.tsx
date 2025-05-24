@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { X, Twitter, MessagesSquare, Wallet, Check, LogOut } from "lucide-react";
@@ -75,42 +74,89 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
         'width=500,height=600,scrollbars=yes,resizable=yes'
       );
 
-      // Listen for the popup to close or get the auth code
-      const checkClosed = setInterval(() => {
-        if (popup?.closed) {
+      if (!popup) {
+        throw new Error('Popup blocked');
+      }
+
+      // Create a promise to handle the OAuth result
+      const authResult = new Promise<boolean>((resolve) => {
+        const checkClosed = setInterval(() => {
+          if (popup.closed) {
+            clearInterval(checkClosed);
+            
+            // Check if we have an auth code in the URL (this would happen in a real implementation)
+            // For now, we'll simulate checking if the user actually completed the auth
+            // In a real app, you'd listen for postMessage from the popup or check URL params
+            
+            try {
+              // Try to access the popup URL (this will fail due to CORS, indicating user didn't complete auth)
+              const popupUrl = popup.location.href;
+              console.log('Popup URL:', popupUrl);
+              
+              // If we can access the URL and it contains our redirect URI with a code, auth was successful
+              if (popupUrl.includes(window.location.origin) && popupUrl.includes('code=')) {
+                resolve(true);
+              } else {
+                resolve(false);
+              }
+            } catch (error) {
+              // CORS error means the popup is still on the OAuth provider's domain
+              // which means the user didn't complete the authentication
+              console.log('Auth cancelled or failed');
+              resolve(false);
+            }
+          }
+        }, 1000);
+
+        // Timeout after 5 minutes
+        setTimeout(() => {
+          if (!popup.closed) {
+            popup.close();
+          }
           clearInterval(checkClosed);
-          setIsConnecting(null);
-          
-          // For demo purposes, simulate successful connection
-          // In production, you'd handle the OAuth callback and get user data
-          const mockUser = {
-            id: '123456789',
-            username: 'User#1234',
-            avatar: 'avatar_hash'
-          };
-          
-          setConnections(prev => ({
-            ...prev,
-            discord: { connected: true, user: mockUser }
-          }));
-          
-          toast({
-            title: "Discord Connected!",
-            description: `Successfully connected as ${mockUser.username}`,
-            duration: 3000,
-          });
-        }
-      }, 1000);
+          resolve(false);
+        }, 300000);
+      });
+
+      const success = await authResult;
+      
+      if (success) {
+        // Only simulate successful connection if auth was completed
+        const mockUser = {
+          id: '123456789',
+          username: 'User#1234',
+          avatar: 'avatar_hash'
+        };
+        
+        setConnections(prev => ({
+          ...prev,
+          discord: { connected: true, user: mockUser }
+        }));
+        
+        toast({
+          title: "Discord Connected!",
+          description: `Successfully connected as ${mockUser.username}`,
+          duration: 3000,
+        });
+      } else {
+        toast({
+          title: "Connection Cancelled",
+          description: "Discord authentication was cancelled or failed.",
+          variant: "destructive",
+          duration: 3000,
+        });
+      }
 
     } catch (error) {
       console.error('Discord connection error:', error);
-      setIsConnecting(null);
       toast({
         title: "Connection Failed",
         description: "Failed to connect to Discord. Please try again.",
         variant: "destructive",
         duration: 5000,
       });
+    } finally {
+      setIsConnecting(null);
     }
   };
 
@@ -132,42 +178,85 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
         'width=500,height=600,scrollbars=yes,resizable=yes'
       );
 
-      // Listen for the popup to close
-      const checkClosed = setInterval(() => {
-        if (popup?.closed) {
+      if (!popup) {
+        throw new Error('Popup blocked');
+      }
+
+      // Create a promise to handle the OAuth result
+      const authResult = new Promise<boolean>((resolve) => {
+        const checkClosed = setInterval(() => {
+          if (popup.closed) {
+            clearInterval(checkClosed);
+            
+            try {
+              // Try to access the popup URL (this will fail due to CORS, indicating user didn't complete auth)
+              const popupUrl = popup.location.href;
+              console.log('Popup URL:', popupUrl);
+              
+              // If we can access the URL and it contains our redirect URI with a code, auth was successful
+              if (popupUrl.includes(window.location.origin) && popupUrl.includes('code=')) {
+                resolve(true);
+              } else {
+                resolve(false);
+              }
+            } catch (error) {
+              // CORS error means the popup is still on the OAuth provider's domain
+              // which means the user didn't complete the authentication
+              console.log('Auth cancelled or failed');
+              resolve(false);
+            }
+          }
+        }, 1000);
+
+        // Timeout after 5 minutes
+        setTimeout(() => {
+          if (!popup.closed) {
+            popup.close();
+          }
           clearInterval(checkClosed);
-          setIsConnecting(null);
-          
-          // For demo purposes, simulate successful connection
-          // In production, you'd handle the OAuth callback and get user data
-          const mockUser = {
-            id: '987654321',
-            username: '@disconnected_user',
-            profile_image_url: 'profile_image_url'
-          };
-          
-          setConnections(prev => ({
-            ...prev,
-            twitter: { connected: true, user: mockUser }
-          }));
-          
-          toast({
-            title: "Twitter Connected!",
-            description: `Successfully connected as ${mockUser.username}`,
-            duration: 3000,
-          });
-        }
-      }, 1000);
+          resolve(false);
+        }, 300000);
+      });
+
+      const success = await authResult;
+      
+      if (success) {
+        // Only simulate successful connection if auth was completed
+        const mockUser = {
+          id: '987654321',
+          username: '@disconnected_user',
+          profile_image_url: 'profile_image_url'
+        };
+        
+        setConnections(prev => ({
+          ...prev,
+          twitter: { connected: true, user: mockUser }
+        }));
+        
+        toast({
+          title: "Twitter Connected!",
+          description: `Successfully connected as ${mockUser.username}`,
+          duration: 3000,
+        });
+      } else {
+        toast({
+          title: "Connection Cancelled",
+          description: "Twitter authentication was cancelled or failed.",
+          variant: "destructive",
+          duration: 3000,
+        });
+      }
 
     } catch (error) {
       console.error('Twitter connection error:', error);
-      setIsConnecting(null);
       toast({
         title: "Connection Failed",
         description: "Failed to connect to Twitter. Please try again.",
         variant: "destructive",
         duration: 5000,
       });
+    } finally {
+      setIsConnecting(null);
     }
   };
 
