@@ -2,11 +2,15 @@
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { connectWallet, WalletInfo } from '@/utils/web3Utils';
+import { useToast } from "@/hooks/use-toast";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [walletConnected, setWalletConnected] = useState(false);
+  const [walletInfo, setWalletInfo] = useState<WalletInfo | null>(null);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const { toast } = useToast();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -17,10 +21,43 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
-  const connectWallet = () => {
-    console.log("Wallet connection requested");
-    // In a real implementation, this would connect to MetaMask or another wallet
-    setWalletConnected(true);
+  const handleConnectWallet = async () => {
+    setIsConnecting(true);
+    console.log("Attempting wallet connection...");
+    
+    try {
+      const wallet = await connectWallet();
+      if (wallet) {
+        setWalletInfo(wallet);
+        toast({
+          title: "Wallet Connected!",
+          description: `Connected to ${wallet.address.slice(0, 6)}...${wallet.address.slice(-4)}`,
+          duration: 3000,
+        });
+        console.log("Wallet connected successfully:", wallet);
+      } else {
+        toast({
+          title: "Connection Failed",
+          description: "Please make sure MetaMask is installed and try again.",
+          variant: "destructive",
+          duration: 5000,
+        });
+      }
+    } catch (error) {
+      console.error("Wallet connection error:", error);
+      toast({
+        title: "Connection Error",
+        description: "An error occurred while connecting to your wallet.",
+        variant: "destructive",
+        duration: 5000,
+      });
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+  
+  const formatAddress = (address: string) => {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
   
   return (
@@ -42,11 +79,12 @@ const Navbar = () => {
           
           <div className="hidden md:block">
             <Button 
-              onClick={connectWallet} 
+              onClick={handleConnectWallet} 
               variant="outline"
-              className={`gradient-border ${walletConnected ? 'bg-green-500/20' : 'bg-background/50'} hover:bg-accent/20`}
+              disabled={isConnecting}
+              className={`gradient-border ${walletInfo ? 'bg-green-500/20' : 'bg-background/50'} hover:bg-accent/20`}
             >
-              {walletConnected ? 'Wallet Connected' : 'Connect Wallet'}
+              {isConnecting ? 'Connecting...' : walletInfo ? formatAddress(walletInfo.address) : 'Connect Wallet'}
             </Button>
           </div>
           
@@ -93,13 +131,14 @@ const Navbar = () => {
             </a>
             <Button 
               onClick={() => {
-                connectWallet();
+                handleConnectWallet();
                 setIsOpen(false);
               }} 
               variant="outline"
-              className={`w-full gradient-border ${walletConnected ? 'bg-green-500/20' : 'bg-background/50'} hover:bg-accent/20`}
+              disabled={isConnecting}
+              className={`w-full gradient-border ${walletInfo ? 'bg-green-500/20' : 'bg-background/50'} hover:bg-accent/20`}
             >
-              {walletConnected ? 'Wallet Connected' : 'Connect Wallet'}
+              {isConnecting ? 'Connecting...' : walletInfo ? formatAddress(walletInfo.address) : 'Connect Wallet'}
             </Button>
           </div>
         </div>
