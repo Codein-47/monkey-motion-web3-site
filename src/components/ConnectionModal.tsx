@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { X, Twitter, MessagesSquare, Wallet, Check } from "lucide-react";
+import { X, Twitter, MessagesSquare, Wallet, Check, LogOut } from "lucide-react";
 import { connectWallet, WalletInfo } from '@/utils/web3Utils';
 import { useToast } from "@/hooks/use-toast";
 
@@ -11,15 +11,29 @@ interface ConnectionModalProps {
 }
 
 interface ConnectionStatus {
-  discord: boolean;
-  twitter: boolean;
+  discord: {
+    connected: boolean;
+    user?: {
+      id: string;
+      username: string;
+      avatar?: string;
+    };
+  };
+  twitter: {
+    connected: boolean;
+    user?: {
+      id: string;
+      username: string;
+      profile_image_url?: string;
+    };
+  };
   wallet: WalletInfo | null;
 }
 
 const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
   const [connections, setConnections] = useState<ConnectionStatus>({
-    discord: false,
-    twitter: false,
+    discord: { connected: false },
+    twitter: { connected: false },
     wallet: null,
   });
   const [isConnecting, setIsConnecting] = useState<string | null>(null);
@@ -29,7 +43,11 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
   useEffect(() => {
     const savedConnections = localStorage.getItem('disconnected_connections');
     if (savedConnections) {
-      setConnections(JSON.parse(savedConnections));
+      try {
+        setConnections(JSON.parse(savedConnections));
+      } catch (error) {
+        console.error('Error loading saved connections:', error);
+      }
     }
   }, []);
 
@@ -42,30 +60,115 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
 
   const handleDiscordConnect = async () => {
     setIsConnecting('discord');
-    // Simulate Discord connection
-    setTimeout(() => {
-      setConnections(prev => ({ ...prev, discord: true }));
+    try {
+      // Discord OAuth URL
+      const clientId = '1234567890123456789'; // Replace with your Discord app client ID
+      const redirectUri = encodeURIComponent(window.location.origin);
+      const scope = 'identify';
+      
+      const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
+      
+      // Open Discord OAuth in a popup
+      const popup = window.open(
+        discordAuthUrl,
+        'discord-auth',
+        'width=500,height=600,scrollbars=yes,resizable=yes'
+      );
+
+      // Listen for the popup to close or get the auth code
+      const checkClosed = setInterval(() => {
+        if (popup?.closed) {
+          clearInterval(checkClosed);
+          setIsConnecting(null);
+          
+          // For demo purposes, simulate successful connection
+          // In production, you'd handle the OAuth callback and get user data
+          const mockUser = {
+            id: '123456789',
+            username: 'User#1234',
+            avatar: 'avatar_hash'
+          };
+          
+          setConnections(prev => ({
+            ...prev,
+            discord: { connected: true, user: mockUser }
+          }));
+          
+          toast({
+            title: "Discord Connected!",
+            description: `Successfully connected as ${mockUser.username}`,
+            duration: 3000,
+          });
+        }
+      }, 1000);
+
+    } catch (error) {
+      console.error('Discord connection error:', error);
       setIsConnecting(null);
       toast({
-        title: "Discord Connected!",
-        description: "Successfully connected to Discord network",
-        duration: 3000,
+        title: "Connection Failed",
+        description: "Failed to connect to Discord. Please try again.",
+        variant: "destructive",
+        duration: 5000,
       });
-    }, 1500);
+    }
   };
 
   const handleTwitterConnect = async () => {
     setIsConnecting('twitter');
-    // Simulate Twitter connection
-    setTimeout(() => {
-      setConnections(prev => ({ ...prev, twitter: true }));
+    try {
+      // Twitter OAuth URL (you'll need to set up Twitter OAuth 2.0)
+      const clientId = 'your_twitter_client_id'; // Replace with your Twitter app client ID
+      const redirectUri = encodeURIComponent(window.location.origin);
+      const scope = 'tweet.read%20users.read';
+      const codeChallenge = 'challenge'; // In production, generate a proper PKCE challenge
+      
+      const twitterAuthUrl = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=state&code_challenge=${codeChallenge}&code_challenge_method=plain`;
+      
+      // Open Twitter OAuth in a popup
+      const popup = window.open(
+        twitterAuthUrl,
+        'twitter-auth',
+        'width=500,height=600,scrollbars=yes,resizable=yes'
+      );
+
+      // Listen for the popup to close
+      const checkClosed = setInterval(() => {
+        if (popup?.closed) {
+          clearInterval(checkClosed);
+          setIsConnecting(null);
+          
+          // For demo purposes, simulate successful connection
+          // In production, you'd handle the OAuth callback and get user data
+          const mockUser = {
+            id: '987654321',
+            username: '@disconnected_user',
+            profile_image_url: 'profile_image_url'
+          };
+          
+          setConnections(prev => ({
+            ...prev,
+            twitter: { connected: true, user: mockUser }
+          }));
+          
+          toast({
+            title: "Twitter Connected!",
+            description: `Successfully connected as ${mockUser.username}`,
+            duration: 3000,
+          });
+        }
+      }, 1000);
+
+    } catch (error) {
+      console.error('Twitter connection error:', error);
       setIsConnecting(null);
       toast({
-        title: "Twitter Connected!",
-        description: "Successfully connected to Twitter network",
-        duration: 3000,
+        title: "Connection Failed",
+        description: "Failed to connect to Twitter. Please try again.",
+        variant: "destructive",
+        duration: 5000,
       });
-    }, 1500);
+    }
   };
 
   const handleWalletConnect = async () => {
@@ -100,6 +203,42 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
     }
   };
 
+  const handleDiscordDisconnect = () => {
+    setConnections(prev => ({
+      ...prev,
+      discord: { connected: false }
+    }));
+    toast({
+      title: "Discord Disconnected",
+      description: "Successfully disconnected from Discord",
+      duration: 3000,
+    });
+  };
+
+  const handleTwitterDisconnect = () => {
+    setConnections(prev => ({
+      ...prev,
+      twitter: { connected: false }
+    }));
+    toast({
+      title: "Twitter Disconnected",
+      description: "Successfully disconnected from Twitter",
+      duration: 3000,
+    });
+  };
+
+  const handleWalletDisconnect = () => {
+    setConnections(prev => ({
+      ...prev,
+      wallet: null
+    }));
+    toast({
+      title: "Wallet Disconnected",
+      description: "Successfully disconnected wallet",
+      duration: 3000,
+    });
+  };
+
   const formatAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
@@ -127,11 +266,26 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
                 <MessagesSquare className="text-red-500" size={24} />
                 <div>
                   <h3 className="font-semibold">Discord</h3>
-                  <p className="text-sm text-gray-400">Connect your Discord account</p>
+                  <p className="text-sm text-gray-400">
+                    {connections.discord.connected && connections.discord.user
+                      ? connections.discord.user.username
+                      : 'Connect your Discord account'
+                    }
+                  </p>
                 </div>
               </div>
-              {connections.discord ? (
-                <Check className="text-green-500" size={20} />
+              {connections.discord.connected ? (
+                <div className="flex items-center space-x-2">
+                  <Check className="text-green-500" size={20} />
+                  <Button
+                    onClick={handleDiscordDisconnect}
+                    variant="outline"
+                    size="sm"
+                    className="border-red-500/50 text-red-500 hover:bg-red-500/10"
+                  >
+                    <LogOut size={16} />
+                  </Button>
+                </div>
               ) : (
                 <Button
                   onClick={handleDiscordConnect}
@@ -153,11 +307,26 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
                 <Twitter className="text-red-500" size={24} />
                 <div>
                   <h3 className="font-semibold">Twitter</h3>
-                  <p className="text-sm text-gray-400">Connect your Twitter account</p>
+                  <p className="text-sm text-gray-400">
+                    {connections.twitter.connected && connections.twitter.user
+                      ? connections.twitter.user.username
+                      : 'Connect your Twitter account'
+                    }
+                  </p>
                 </div>
               </div>
-              {connections.twitter ? (
-                <Check className="text-green-500" size={20} />
+              {connections.twitter.connected ? (
+                <div className="flex items-center space-x-2">
+                  <Check className="text-green-500" size={20} />
+                  <Button
+                    onClick={handleTwitterDisconnect}
+                    variant="outline"
+                    size="sm"
+                    className="border-red-500/50 text-red-500 hover:bg-red-500/10"
+                  >
+                    <LogOut size={16} />
+                  </Button>
+                </div>
               ) : (
                 <Button
                   onClick={handleTwitterConnect}
@@ -185,7 +354,17 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
                 </div>
               </div>
               {connections.wallet ? (
-                <Check className="text-green-500" size={20} />
+                <div className="flex items-center space-x-2">
+                  <Check className="text-green-500" size={20} />
+                  <Button
+                    onClick={handleWalletDisconnect}
+                    variant="outline"
+                    size="sm"
+                    className="border-red-500/50 text-red-500 hover:bg-red-500/10"
+                  >
+                    <LogOut size={16} />
+                  </Button>
+                </div>
               ) : (
                 <Button
                   onClick={handleWalletConnect}
