@@ -18,9 +18,17 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+    setIsOpen(false);
+  };
+  
   return (
     <>
-      <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-black/95 backdrop-blur-md border-b border-red-500/20' : 'bg-transparent'}`}>
+      <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-black/80 backdrop-blur-md border-b border-red-500/20' : 'bg-transparent'}`}>
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex items-center justify-between h-16 md:h-20">
             <div className="flex items-center">
@@ -31,10 +39,24 @@ const Navbar = () => {
             </div>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="#collection" className="text-foreground/80 hover:text-red-500 transition-colors">Collection</a>
-              <a href="#about" className="text-foreground/80 hover:text-red-500 transition-colors">About</a>
-              <a href="#roadmap" className="text-foreground/80 hover:text-red-500 transition-colors">Roadmap</a>
-              <a href="#team" className="text-foreground/80 hover:text-red-500 transition-colors">Team</a>
+              <button 
+                onClick={() => scrollToSection('home')}
+                className="text-foreground/80 hover:text-red-500 transition-colors"
+              >
+                Home
+              </button>
+              <button 
+                onClick={() => scrollToSection('features')}
+                className="text-foreground/80 hover:text-red-500 transition-colors"
+              >
+                Features
+              </button>
+              <button 
+                onClick={() => scrollToSection('contact')}
+                className="text-foreground/80 hover:text-red-500 transition-colors"
+              >
+                Contact
+              </button>
             </nav>
             
             <div className="hidden md:block">
@@ -59,34 +81,24 @@ const Navbar = () => {
         {isOpen && (
           <div className="md:hidden glass-effect border-t border-red-500/20">
             <div className="px-4 pt-2 pb-4 space-y-4">
-              <a 
-                href="#collection" 
-                className="block text-foreground/80 hover:text-red-500 transition-colors"
-                onClick={() => setIsOpen(false)}
+              <button 
+                onClick={() => scrollToSection('home')}
+                className="block text-foreground/80 hover:text-red-500 transition-colors w-full text-left"
               >
-                Collection
-              </a>
-              <a 
-                href="#about" 
-                className="block text-foreground/80 hover:text-red-500 transition-colors"
-                onClick={() => setIsOpen(false)}
+                Home
+              </button>
+              <button 
+                onClick={() => scrollToSection('features')}
+                className="block text-foreground/80 hover:text-red-500 transition-colors w-full text-left"
               >
-                About
-              </a>
-              <a 
-                href="#roadmap" 
-                className="block text-foreground/80 hover:text-red-500 transition-colors"
-                onClick={() => setIsOpen(false)}
+                Features
+              </button>
+              <button 
+                onClick={() => scrollToSection('contact')}
+                className="block text-foreground/80 hover:text-red-500 transition-colors w-full text-left"
               >
-                Roadmap
-              </a>
-              <a 
-                href="#team" 
-                className="block text-foreground/80 hover:text-red-500 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Team
-              </a>
+                Contact
+              </button>
               <Button 
                 onClick={() => {
                   setShowConnectionModal(true);

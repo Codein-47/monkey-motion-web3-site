@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { X, Twitter, MessagesSquare, Wallet, Check } from "lucide-react";
 import { connectWallet, WalletInfo } from '@/utils/web3Utils';
@@ -25,6 +25,19 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
   const [isConnecting, setIsConnecting] = useState<string | null>(null);
   const { toast } = useToast();
 
+  // Load saved connections from localStorage on mount
+  useEffect(() => {
+    const savedConnections = localStorage.getItem('disconnected_connections');
+    if (savedConnections) {
+      setConnections(JSON.parse(savedConnections));
+    }
+  }, []);
+
+  // Save connections to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('disconnected_connections', JSON.stringify(connections));
+  }, [connections]);
+
   if (!isOpen) return null;
 
   const handleDiscordConnect = async () => {
@@ -35,7 +48,7 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
       setIsConnecting(null);
       toast({
         title: "Discord Connected!",
-        description: "Successfully connected to Discord",
+        description: "Successfully connected to Discord network",
         duration: 3000,
       });
     }, 1500);
@@ -49,7 +62,7 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
       setIsConnecting(null);
       toast({
         title: "Twitter Connected!",
-        description: "Successfully connected to Twitter",
+        description: "Successfully connected to Twitter network",
         duration: 3000,
       });
     }, 1500);
@@ -95,7 +108,7 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in-0">
       <div className="bg-gray-900 border border-red-500/30 rounded-xl p-6 w-full max-w-md animate-slide-up">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold gradient-text">Connect Everything</h2>
+          <h2 className="text-2xl font-bold gradient-text">Join the Network</h2>
           <Button
             onClick={onClose}
             variant="ghost"

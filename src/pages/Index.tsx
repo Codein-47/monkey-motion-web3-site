@@ -2,27 +2,23 @@
 import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
-import CollectionSection from '@/components/CollectionSection';
-import AboutSection from '@/components/AboutSection';
-import RoadmapSection from '@/components/RoadmapSection';
-import TeamSection from '@/components/TeamSection';
 import Footer from '@/components/Footer';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const { toast } = useToast();
   
   useEffect(() => {
-    // Simulate web3 wallet detection on page load
+    // Welcome message for Disconnected
     setTimeout(() => {
       toast({
-        title: "Welcome to MonkeyNFT",
-        description: "Connect your wallet to explore our exclusive NFT collection.",
+        title: "Welcome to Disconnected",
+        description: "Connect your accounts to join the network.",
         duration: 5000,
       });
     }, 2000);
     
-    // Add intersection observer to handle animations
+    // Add intersection observer for animations
     const animatedElements = document.querySelectorAll('.appear-animation');
     
     const observer = new IntersectionObserver(
@@ -53,10 +49,6 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <Navbar />
       <HeroSection />
-      <CollectionSection />
-      <AboutSection />
-      <RoadmapSection />
-      <TeamSection />
       <Footer />
     </div>
   );
