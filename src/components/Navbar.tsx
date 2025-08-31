@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import ConnectionModal from './ConnectionModal';
+import { initNavbarAnimations } from '@/utils/gsapAnimations';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +16,12 @@ const Navbar = () => {
     };
     
     window.addEventListener('scroll', handleScroll);
+    
+    // Initialize GSAP animations
+    setTimeout(() => {
+      initNavbarAnimations();
+    }, 100);
+    
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
@@ -28,12 +35,12 @@ const Navbar = () => {
   
   return (
     <>
-      <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'glass-effect border-b border-nft-blue/20' : 'bg-transparent'}`}>
+      <header className={`navbar fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'glass-effect border-b border-nft-blue/20' : 'bg-transparent'}`}>
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex items-center justify-between h-16 md:h-20">
             <div className="flex items-center">
               <a href="#" className="flex items-center space-x-2">
-                <span className="text-4xl animate-bounce-subtle">🐵</span>
+                <span className="navbar-logo text-4xl">🐵</span>
                 <span className="text-2xl font-bold gradient-text">MonkeyNFT</span>
               </a>
             </div>
@@ -74,7 +81,7 @@ const Navbar = () => {
             <div className="hidden md:block">
               <Button 
                 onClick={() => setShowConnectionModal(true)}
-                className="bg-gradient-to-r from-nft-blue to-nft-purple hover:from-nft-purple hover:to-nft-orange text-white font-bold py-2 px-6 rounded-lg transition-all duration-300 transform hover:scale-105"
+                className="gsap-button bg-gradient-to-r from-nft-blue to-nft-purple hover:from-nft-purple hover:to-nft-orange text-white font-bold py-2 px-6 rounded-lg transition-all duration-300"
               >
                 Connect Wallet
               </Button>
