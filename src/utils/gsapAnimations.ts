@@ -178,7 +178,7 @@ export const initNavbarAnimations = () => {
 };
 
 export const initHoverAnimations = () => {
-  // Button hover effects
+  // Button hover effects with RGB
   document.querySelectorAll('.gsap-button').forEach((button) => {
     const tl = gsap.timeline({ paused: true });
     
@@ -186,7 +186,7 @@ export const initHoverAnimations = () => {
       duration: 0.3,
       scale: 1.05,
       rotationX: 5,
-      boxShadow: '0 10px 30px rgba(59, 130, 246, 0.5)',
+      boxShadow: '0 10px 30px rgba(255, 0, 0, 0.5), 0 10px 40px rgba(0, 255, 0, 0.3), 0 10px 50px rgba(0, 0, 255, 0.2)',
       ease: 'power2.out',
     });
 
@@ -194,7 +194,7 @@ export const initHoverAnimations = () => {
     button.addEventListener('mouseleave', () => tl.reverse());
   });
 
-  // Card hover effects
+  // Card hover effects with RGB glow
   document.querySelectorAll('.gsap-card').forEach((card) => {
     const tl = gsap.timeline({ paused: true });
     
@@ -202,12 +202,31 @@ export const initHoverAnimations = () => {
       duration: 0.4,
       y: -10,
       scale: 1.02,
-      boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
+      boxShadow: '0 20px 40px rgba(255, 0, 100, 0.4), 0 10px 20px rgba(0, 255, 100, 0.3)',
       ease: 'power2.out',
     });
 
     card.addEventListener('mouseenter', () => tl.play());
     card.addEventListener('mouseleave', () => tl.reverse());
+  });
+};
+
+export const initRGBAnimations = () => {
+  // RGB cycling for special elements
+  gsap.to('.rgb-special', {
+    duration: 3,
+    filter: 'hue-rotate(360deg)',
+    repeat: -1,
+    ease: 'none',
+  });
+
+  // RGB glow pulse
+  gsap.to('.rgb-pulse', {
+    duration: 2,
+    boxShadow: '0 0 40px #ff0000',
+    repeat: -1,
+    yoyo: true,
+    ease: 'power2.inOut',
   });
 };
 

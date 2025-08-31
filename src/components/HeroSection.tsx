@@ -39,8 +39,8 @@ const HeroSection = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             <div className="order-2 lg:order-1 space-y-6">
               <h1 className="hero-title text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight">
-                <span className="block gradient-text">Monkey</span>
-                <span>NFT Collection</span>
+                <span className="block rgb-text">Monkey</span>
+                <span className="gradient-text">NFT Collection</span>
               </h1>
               
               <p className="hero-subtitle text-lg md:text-xl text-foreground/80 max-w-lg">
@@ -50,7 +50,7 @@ const HeroSection = () => {
               <div className="hero-buttons flex flex-wrap gap-4">
                 <Button 
                   size="lg"
-                  className="gsap-button bg-gradient-to-r from-nft-blue to-nft-purple text-white hover:from-nft-purple hover:to-nft-orange transition-all duration-300"
+                  className="gsap-button rgb-glow bg-gradient-to-r from-nft-blue to-nft-purple text-white hover:from-nft-purple hover:to-nft-orange transition-all duration-300"
                   onClick={() => document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth' })}
                 >
                   Explore Collection
@@ -59,7 +59,7 @@ const HeroSection = () => {
                 <Button 
                   variant="outline"
                   size="lg"
-                  className="gsap-button gradient-border bg-background/50 hover:bg-nft-blue/10 border-nft-blue/50"
+                  className="gsap-button rgb-border bg-background/50 hover:bg-nft-blue/10"
                   onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
                 >
                   Learn More
@@ -95,7 +95,7 @@ const HeroSection = () => {
                 
                 {/* Main Monkey NFT */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="relative w-56 h-56 md:w-72 md:h-72 bg-gradient-to-br from-nft-blue via-nft-purple to-nft-orange p-1 rounded-full overflow-hidden gsap-card">
+                  <div className="relative w-56 h-56 md:w-72 md:h-72 rgb-border rounded-full overflow-hidden gsap-card">
                     <div className="w-full h-full rounded-full bg-black flex items-center justify-center relative">
                       {/* Main monkey emoji */}
                       <div className={`text-6xl md:text-8xl transition-all duration-500 ${isHovered ? 'scale-110' : ''}`}>
@@ -115,15 +115,15 @@ const HeroSection = () => {
                 </div>
                 
                 {/* Floating elements */}
-                <div className="floating-element-1 absolute -top-4 -right-4 w-16 h-16 bg-nft-blue/80 rounded-full flex items-center justify-center">
+                <div className="floating-element-1 absolute -top-4 -right-4 w-16 h-16 rgb-background rounded-full flex items-center justify-center">
                   <span className="text-2xl">💎</span>
                 </div>
                 
-                <div className="floating-element-2 absolute -bottom-4 -left-4 w-16 h-16 bg-nft-purple/80 rounded-full flex items-center justify-center">
+                <div className="floating-element-2 absolute -bottom-4 -left-4 w-16 h-16 rgb-background rounded-full flex items-center justify-center">
                   <span className="text-2xl">🎨</span>
                 </div>
                 
-                <div className="floating-element-3 absolute top-1/2 -left-8 w-12 h-12 bg-nft-orange/80 rounded-full flex items-center justify-center">
+                <div className="floating-element-3 absolute top-1/2 -left-8 w-12 h-12 rgb-background rounded-full flex items-center justify-center">
                   <span className="text-xl">⚡</span>
                 </div>
               </div>
@@ -141,20 +141,20 @@ const HeroSection = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="collection-card gsap-card glass-effect rounded-lg p-6 text-center">
-              <div className="text-6xl mb-4">🐵</div>
+            <div className="collection-card gsap-card glass-effect rgb-hover rounded-lg p-6 text-center">
+              <div className="text-6xl mb-4 rgb-cycle">🐵</div>
               <h3 className="text-xl font-bold mb-2 text-nft-blue">Cyber Monkey #001</h3>
               <p className="text-foreground/70">Rare • 2.5 ETH</p>
             </div>
             
-            <div className="collection-card gsap-card glass-effect rounded-lg p-6 text-center">
-              <div className="text-6xl mb-4">🐒</div>
+            <div className="collection-card gsap-card glass-effect rgb-hover rounded-lg p-6 text-center">
+              <div className="text-6xl mb-4 rgb-cycle">🐒</div>
               <h3 className="text-xl font-bold mb-2 text-nft-purple">Space Monkey #042</h3>
               <p className="text-foreground/70">Epic • 5.1 ETH</p>
             </div>
             
-            <div className="collection-card gsap-card glass-effect rounded-lg p-6 text-center">
-              <div className="text-6xl mb-4">🙈</div>
+            <div className="collection-card gsap-card glass-effect rgb-hover rounded-lg p-6 text-center">
+              <div className="text-6xl mb-4 rgb-cycle">🙈</div>
               <h3 className="text-xl font-bold mb-2 text-nft-orange">Ninja Monkey #777</h3>
               <p className="text-foreground/70">Legendary • 10.3 ETH</p>
             </div>
@@ -185,34 +185,34 @@ const HeroSection = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="roadmap-item text-center">
-              <div className="w-16 h-16 bg-nft-blue rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rgb-background rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🚀</span>
               </div>
-              <h3 className="text-xl font-bold mb-2">Phase 1</h3>
+              <h3 className="text-xl font-bold mb-2 rgb-text">Phase 1</h3>
               <p className="text-foreground/70">Launch Collection</p>
             </div>
             
             <div className="roadmap-item text-center">
-              <div className="w-16 h-16 bg-nft-purple rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rgb-background rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🎮</span>
               </div>
-              <h3 className="text-xl font-bold mb-2">Phase 2</h3>
+              <h3 className="text-xl font-bold mb-2 rgb-text">Phase 2</h3>
               <p className="text-foreground/70">Monkey Games</p>
             </div>
             
             <div className="roadmap-item text-center">
-              <div className="w-16 h-16 bg-nft-orange rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rgb-background rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🌍</span>
               </div>
-              <h3 className="text-xl font-bold mb-2">Phase 3</h3>
+              <h3 className="text-xl font-bold mb-2 rgb-text">Phase 3</h3>
               <p className="text-foreground/70">Metaverse</p>
             </div>
             
             <div className="roadmap-item text-center">
-              <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rgb-background rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">👑</span>
               </div>
-              <h3 className="text-xl font-bold mb-2">Phase 4</h3>
+              <h3 className="text-xl font-bold mb-2 rgb-text">Phase 4</h3>
               <p className="text-foreground/70">DAO Governance</p>
             </div>
           </div>

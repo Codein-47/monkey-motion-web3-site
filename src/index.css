@@ -57,6 +57,56 @@
   }
 }
 
+@keyframes rgb-cycle {
+  0% { filter: hue-rotate(0deg); }
+  16.66% { filter: hue-rotate(60deg); }
+  33.33% { filter: hue-rotate(120deg); }
+  50% { filter: hue-rotate(180deg); }
+  66.66% { filter: hue-rotate(240deg); }
+  83.33% { filter: hue-rotate(300deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+@keyframes rgb-border {
+  0% { border-color: #ff0000; box-shadow: 0 0 20px #ff0000; }
+  16.66% { border-color: #ff8800; box-shadow: 0 0 20px #ff8800; }
+  33.33% { border-color: #00ff00; box-shadow: 0 0 20px #00ff00; }
+  50% { border-color: #00ffff; box-shadow: 0 0 20px #00ffff; }
+  66.66% { border-color: #0088ff; box-shadow: 0 0 20px #0088ff; }
+  83.33% { border-color: #8800ff; box-shadow: 0 0 20px #8800ff; }
+  100% { border-color: #ff0088; box-shadow: 0 0 20px #ff0088; }
+}
+
+@keyframes rgb-glow {
+  0% { box-shadow: 0 0 30px #ff0000, 0 0 60px #ff0000; }
+  16.66% { box-shadow: 0 0 30px #ff8800, 0 0 60px #ff8800; }
+  33.33% { box-shadow: 0 0 30px #00ff00, 0 0 60px #00ff00; }
+  50% { box-shadow: 0 0 30px #00ffff, 0 0 60px #00ffff; }
+  66.66% { box-shadow: 0 0 30px #0088ff, 0 0 60px #0088ff; }
+  83.33% { box-shadow: 0 0 30px #8800ff, 0 0 60px #8800ff; }
+  100% { box-shadow: 0 0 30px #ff0088, 0 0 60px #ff0088; }
+}
+
+@keyframes rgb-text {
+  0% { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
+  16.66% { color: #ff8800; text-shadow: 0 0 10px #ff8800; }
+  33.33% { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
+  50% { color: #00ffff; text-shadow: 0 0 10px #00ffff; }
+  66.66% { color: #0088ff; text-shadow: 0 0 10px #0088ff; }
+  83.33% { color: #8800ff; text-shadow: 0 0 10px #8800ff; }
+  100% { color: #ff0088; text-shadow: 0 0 10px #ff0088; }
+}
+
+@keyframes rgb-background {
+  0% { background: linear-gradient(45deg, #ff0000, #ff4444); }
+  16.66% { background: linear-gradient(45deg, #ff8800, #ffaa44); }
+  33.33% { background: linear-gradient(45deg, #00ff00, #44ff44); }
+  50% { background: linear-gradient(45deg, #00ffff, #44ffff); }
+  66.66% { background: linear-gradient(45deg, #0088ff, #4488ff); }
+  83.33% { background: linear-gradient(45deg, #8800ff, #aa44ff); }
+  100% { background: linear-gradient(45deg, #ff0088, #ff44aa); }
+}
+
 @layer components {
   .glass-effect {
     @apply backdrop-blur-md bg-nft-blue/10 border border-nft-blue/20 shadow-lg;
@@ -68,6 +118,32 @@
   
   .gradient-border {
     @apply relative before:absolute before:inset-0 before:p-[2px] before:bg-gradient-to-r before:from-nft-blue before:via-nft-purple before:to-nft-orange before:rounded-[inherit] before:-z-10 before:content-[''];
+  }
+
+  .rgb-border {
+    border: 2px solid #ff0000;
+    animation: rgb-border 3s linear infinite;
+  }
+
+  .rgb-glow {
+    animation: rgb-glow 4s linear infinite;
+  }
+
+  .rgb-text {
+    animation: rgb-text 2s linear infinite;
+  }
+
+  .rgb-cycle {
+    animation: rgb-cycle 5s linear infinite;
+  }
+
+  .rgb-background {
+    animation: rgb-background 6s linear infinite;
+  }
+
+  .rgb-hover:hover {
+    animation: rgb-glow 1s linear infinite;
+    transition: all 0.3s ease;
   }
 
   .appear-animation {
