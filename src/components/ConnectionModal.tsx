@@ -40,7 +40,7 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
 
   // Load saved connections from localStorage on mount
   useEffect(() => {
-    const savedConnections = localStorage.getItem('disconnected_connections');
+    const savedConnections = localStorage.getItem('monkeynft_connections');
     if (savedConnections) {
       try {
         setConnections(JSON.parse(savedConnections));
@@ -52,7 +52,7 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
 
   // Save connections to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem('disconnected_connections', JSON.stringify(connections));
+    localStorage.setItem('monkeynft_connections', JSON.stringify(connections));
   }, [connections]);
 
   if (!isOpen) return null;
@@ -84,31 +84,22 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
           if (popup.closed) {
             clearInterval(checkClosed);
             
-            // Check if we have an auth code in the URL (this would happen in a real implementation)
-            // For now, we'll simulate checking if the user actually completed the auth
-            // In a real app, you'd listen for postMessage from the popup or check URL params
-            
             try {
-              // Try to access the popup URL (this will fail due to CORS, indicating user didn't complete auth)
               const popupUrl = popup.location.href;
               console.log('Popup URL:', popupUrl);
               
-              // If we can access the URL and it contains our redirect URI with a code, auth was successful
               if (popupUrl.includes(window.location.origin) && popupUrl.includes('code=')) {
                 resolve(true);
               } else {
                 resolve(false);
               }
             } catch (error) {
-              // CORS error means the popup is still on the OAuth provider's domain
-              // which means the user didn't complete the authentication
               console.log('Auth cancelled or failed');
               resolve(false);
             }
           }
         }, 1000);
 
-        // Timeout after 5 minutes
         setTimeout(() => {
           if (!popup.closed) {
             popup.close();
@@ -121,7 +112,6 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
       const success = await authResult;
       
       if (success) {
-        // Only simulate successful connection if auth was completed
         const mockUser = {
           id: '123456789',
           username: 'User#1234',
@@ -163,15 +153,13 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
   const handleTwitterConnect = async () => {
     setIsConnecting('twitter');
     try {
-      // Twitter OAuth URL (you'll need to set up Twitter OAuth 2.0)
-      const clientId = 'your_twitter_client_id'; // Replace with your Twitter app client ID
+      const clientId = 'your_twitter_client_id';
       const redirectUri = encodeURIComponent(window.location.origin);
       const scope = 'tweet.read%20users.read';
-      const codeChallenge = 'challenge'; // In production, generate a proper PKCE challenge
+      const codeChallenge = 'challenge';
       
       const twitterAuthUrl = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=state&code_challenge=${codeChallenge}&code_challenge_method=plain`;
       
-      // Open Twitter OAuth in a popup
       const popup = window.open(
         twitterAuthUrl,
         'twitter-auth',
@@ -182,33 +170,27 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
         throw new Error('Popup blocked');
       }
 
-      // Create a promise to handle the OAuth result
       const authResult = new Promise<boolean>((resolve) => {
         const checkClosed = setInterval(() => {
           if (popup.closed) {
             clearInterval(checkClosed);
             
             try {
-              // Try to access the popup URL (this will fail due to CORS, indicating user didn't complete auth)
               const popupUrl = popup.location.href;
               console.log('Popup URL:', popupUrl);
               
-              // If we can access the URL and it contains our redirect URI with a code, auth was successful
               if (popupUrl.includes(window.location.origin) && popupUrl.includes('code=')) {
                 resolve(true);
               } else {
                 resolve(false);
               }
             } catch (error) {
-              // CORS error means the popup is still on the OAuth provider's domain
-              // which means the user didn't complete the authentication
               console.log('Auth cancelled or failed');
               resolve(false);
             }
           }
         }, 1000);
 
-        // Timeout after 5 minutes
         setTimeout(() => {
           if (!popup.closed) {
             popup.close();
@@ -221,10 +203,9 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
       const success = await authResult;
       
       if (success) {
-        // Only simulate successful connection if auth was completed
         const mockUser = {
           id: '987654321',
-          username: '@disconnected_user',
+          username: '@nft_collector',
           profile_image_url: 'profile_image_url'
         };
         
@@ -334,9 +315,9 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in-0">
-      <div className="bg-gray-900 border border-red-500/30 rounded-xl p-6 w-full max-w-md animate-slide-up">
+      <div className="bg-gray-900 border border-nft-blue/30 rounded-xl p-6 w-full max-w-md animate-slide-up">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold gradient-text">Join the Network</h2>
+          <h2 className="text-2xl font-bold gradient-text">Connect to MonkeyNFT</h2>
           <Button
             onClick={onClose}
             variant="ghost"
@@ -352,7 +333,7 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
           <div className="connection-item">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <MessagesSquare className="text-red-500" size={24} />
+                <MessagesSquare className="text-nft-blue" size={24} />
                 <div>
                   <h3 className="font-semibold">Discord</h3>
                   <p className="text-sm text-gray-400">
@@ -370,7 +351,7 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
                     onClick={handleDiscordDisconnect}
                     variant="outline"
                     size="sm"
-                    className="border-red-500/50 text-red-500 hover:bg-red-500/10"
+                    className="border-nft-blue/50 text-nft-blue hover:bg-nft-blue/10"
                   >
                     <LogOut size={16} />
                   </Button>
@@ -381,7 +362,7 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
                   disabled={isConnecting === 'discord'}
                   variant="outline"
                   size="sm"
-                  className="border-red-500/50 text-red-500 hover:bg-red-500/10"
+                  className="border-nft-blue/50 text-nft-blue hover:bg-nft-blue/10"
                 >
                   {isConnecting === 'discord' ? 'Connecting...' : 'Connect'}
                 </Button>
@@ -393,7 +374,7 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
           <div className="connection-item">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <Twitter className="text-red-500" size={24} />
+                <Twitter className="text-nft-blue" size={24} />
                 <div>
                   <h3 className="font-semibold">Twitter</h3>
                   <p className="text-sm text-gray-400">
@@ -411,7 +392,7 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
                     onClick={handleTwitterDisconnect}
                     variant="outline"
                     size="sm"
-                    className="border-red-500/50 text-red-500 hover:bg-red-500/10"
+                    className="border-nft-blue/50 text-nft-blue hover:bg-nft-blue/10"
                   >
                     <LogOut size={16} />
                   </Button>
@@ -422,7 +403,7 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
                   disabled={isConnecting === 'twitter'}
                   variant="outline"
                   size="sm"
-                  className="border-red-500/50 text-red-500 hover:bg-red-500/10"
+                  className="border-nft-blue/50 text-nft-blue hover:bg-nft-blue/10"
                 >
                   {isConnecting === 'twitter' ? 'Connecting...' : 'Connect'}
                 </Button>
@@ -434,7 +415,7 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
           <div className="connection-item">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <Wallet className="text-red-500" size={24} />
+                <Wallet className="text-nft-blue" size={24} />
                 <div>
                   <h3 className="font-semibold">Web3 Wallet</h3>
                   <p className="text-sm text-gray-400">
@@ -449,7 +430,7 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
                     onClick={handleWalletDisconnect}
                     variant="outline"
                     size="sm"
-                    className="border-red-500/50 text-red-500 hover:bg-red-500/10"
+                    className="border-nft-blue/50 text-nft-blue hover:bg-nft-blue/10"
                   >
                     <LogOut size={16} />
                   </Button>
@@ -460,7 +441,7 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
                   disabled={isConnecting === 'wallet'}
                   variant="outline"
                   size="sm"
-                  className="border-red-500/50 text-red-500 hover:bg-red-500/10"
+                  className="border-nft-blue/50 text-nft-blue hover:bg-nft-blue/10"
                 >
                   {isConnecting === 'wallet' ? 'Connecting...' : 'Connect'}
                 </Button>
@@ -469,9 +450,9 @@ const ConnectionModal = ({ isOpen, onClose }: ConnectionModalProps) => {
           </div>
         </div>
 
-        <div className="mt-6 pt-4 border-t border-red-500/20">
+        <div className="mt-6 pt-4 border-t border-nft-blue/20">
           <p className="text-sm text-gray-400 text-center">
-            Connect all services to unlock the full Disconnected experience
+            Connect to access exclusive MonkeyNFT features and community
           </p>
         </div>
       </div>

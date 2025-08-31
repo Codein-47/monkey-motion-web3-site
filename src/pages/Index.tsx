@@ -9,11 +9,11 @@ const Index = () => {
   const { toast } = useToast();
   
   useEffect(() => {
-    // Welcome message for Disconnected
+    // Welcome message for MonkeyNFT
     setTimeout(() => {
       toast({
-        title: "Welcome to Disconnected",
-        description: "Connect your accounts to join the network.",
+        title: "Welcome to MonkeyNFT",
+        description: "Discover the most exclusive monkey collection!",
         duration: 5000,
       });
     }, 2000);

@@ -63,13 +63,11 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-        // Updated theme colors for Disconnected project
-        disconnected: {
-          'red': '#DC2626',
-          'dark-red': '#991B1B',
-          'black': '#000000',
-          'dark-gray': '#111111',
-          'light-gray': '#333333',
+        // NFT theme colors
+        nft: {
+          'blue': '#3B82F6',
+          'purple': '#8B5CF6',
+          'orange': '#F97316',
         }
 			},
 			borderRadius: {
@@ -102,10 +100,6 @@ export default {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0.8' }
         },
-        'glow': {
-          '0%, 100%': { boxShadow: '0 0 5px #DC2626' },
-          '50%': { boxShadow: '0 0 20px #DC2626, 0 0 30px #DC2626' }
-        },
         'slide-up': {
           'from': { transform: 'translateY(100%)', opacity: '0' },
           'to': { transform: 'translateY(0)', opacity: '1' }
@@ -118,7 +112,6 @@ export default {
         'bounce-subtle': 'bounce-subtle 2s ease-in-out infinite',
         'rotate-slow': 'rotate-slow 8s linear infinite',
         'pulse-subtle': 'pulse-subtle 2s ease-in-out infinite',
-        'glow': 'glow 2s ease-in-out infinite',
         'slide-up': 'slide-up 0.5s ease-out'
 			}
 		}
